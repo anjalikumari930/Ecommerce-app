@@ -110,7 +110,7 @@ const HomePage = () => {
     <Layout title={"ALl Products - Best offers "}>
       {/* banner image */}
       <img
-        src="/images/banner.png"
+        src="/images/banner1.png"
         className="banner-img"
         alt="bannerimage"
         width={"100%"}
@@ -174,13 +174,13 @@ const HomePage = () => {
                   </p>
                   <div className="card-name-price">
                     <button
-                      className="btn btn-info ms-1"
+                      className="btn ms-1" style={{backgroundColor: "#f0ad4e", borderColor: "#f0ad4e"}}
                       onClick={() => navigate(`/product/${p.slug}`)}
                     >
                       More Details
                     </button>
                     <button
-                      className="btn btn-dark ms-1"
+                      className="btn ms-1" style={{backgroundColor: "#A79277", borderColor: "#A79277"}}
                       onClick={() => {
                         setCart([...cart, p]);
                         localStorage.setItem(

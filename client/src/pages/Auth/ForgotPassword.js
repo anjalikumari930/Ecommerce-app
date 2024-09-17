@@ -73,7 +73,7 @@ const ForgotPasssword = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn"style={{backgroundColor: "#A79277", borderColor: "#A79277"}}>
             RESET
           </button>
         </form>

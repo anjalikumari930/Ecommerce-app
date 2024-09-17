@@ -26,15 +26,15 @@ const SearchInput = () => {
         onSubmit={handleSubmit}
       >
         <input
-          className="form-control me-2"
+          className="form-control me-2 rounded-pill" style={{backgroundColor:"#D1BB9E"}}
           type="search"
           placeholder="Search"
           aria-label="Search"
           value={values.keyword}
           onChange={(e) => setValues({ ...values, keyword: e.target.value })}
         />
-        <button className="btn btn-outline-success" type="submit">
-          Search
+        <button className="btn rounded-circle" type="submit">
+        🔎
         </button>
       </form>
     </div>

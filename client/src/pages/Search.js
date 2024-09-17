@@ -34,13 +34,13 @@ const Search = () => {
                   </p>
                   <p className="card-text"> $ {p.price}</p>
                   <button
-                      className="btn btn-info ms-1"
+                      className="btn ms-1"  style={{backgroundColor: "#f0ad4e", borderColor: "#f0ad4e"}}
                       onClick={() => navigate(`/product/${p.slug}`)}
                     >
                       More Details
                     </button>
                     <button
-                      className="btn btn-dark ms-1"
+                      className="btn ms-1" style={{backgroundColor: "#A79277", borderColor: "#A79277"}}
                       onClick={() => {
                         setCart([...cart, p]);
                         localStorage.setItem(

@@ -190,7 +190,7 @@ const CartPage = () => {
               ) : (
                 <div className="mb-3">
                   <button
-                    className="btn btn-outline-warning"
+                    className="btn" style={{backgroundColor: "#f0ad4e", borderColor: "#f0ad4e"}}
                     onClick={() => setRentProduct(true)}
                   >
                     Rent this product for 2% per day
@@ -213,7 +213,7 @@ const CartPage = () => {
                     />
 
                     <button
-                      className="btn btn-primary"
+                      className="btn "style={{backgroundColor: "#A79277", borderColor: "#A79277"}}
                       onClick={handlePayment}
                       disabled={
                         loading ||

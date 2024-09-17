@@ -1,6 +1,5 @@
 {
   "name": "client",
-  "proxy": "http://localhost:5000/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,8 +7,9 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.6.1",
-    "axios": "^1.4.0",
+    "axios": "^1.7.7",
     "braintree-web-drop-in-react": "^1.2.1",
+    "client": "file:",
     "http-proxy-middleware": "^2.0.6",
     "moment": "^2.29.4",
     "react": "^18.2.0",

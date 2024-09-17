@@ -17,28 +17,33 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/login", {
+      const res = await axios.post("http://localhost:8080/api/v1/auth/login", {
         email,
         password,
       });
-      if (res && res.data.success) {
-        toast.success(res.data.message);
+      if (res && res.status === 200) {
+        const { userId, email, role } = res.data; // Extract the user data
+        toast.success("Login successful");
+
+        // Update auth state with user info only (no token)
         setAuth({
           ...auth,
-          user: res.data.user,
-          token: res.data.token,
+          user: { userId, email, role },
         });
-        localStorage.setItem("auth", JSON.stringify(res.data));
+
+        // Store user info in local storage (without token)
+        localStorage.setItem("auth", JSON.stringify({ userId, email, role }));
+
+        // Redirect to previous page or home
         navigate(location.state || "/");
       } else {
-        toast.error(res.data.message);
+        toast.error(res.data.message || "Login failed");
       }
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
     }
   };
-
   return (
     <Layout title={"Register - Ecommerce App"}>
       <div className="form-container">
