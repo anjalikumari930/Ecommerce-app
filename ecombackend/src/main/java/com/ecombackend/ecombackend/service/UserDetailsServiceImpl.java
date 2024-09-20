@@ -26,9 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()))) // assuming
-                                                                                                           // role is an
-                                                                                                           // enum
+                .authorities(Collections
+                        .singletonList(new SimpleGrantedAuthority(user.getRole() == 1 ? "ROLE_ADMIN" : "ROLE_USER")))
                 .build();
     }
 }

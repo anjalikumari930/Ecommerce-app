@@ -52,10 +52,6 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<?> getProducts() {
-        return getProducts(0); // Default to the first page
-    }
-
     // Update an existing product
     public ResponseEntity<?> updateProduct(String pid, MultipartFile file, String productJson) {
         try {
@@ -90,19 +86,32 @@ public class ProductService {
     }
 
     // Get all products
-    public ResponseEntity<?> getProducts(int page) {
-        Pageable pageable = PageRequest.of(page, 10); // 10 products per page
+    public ResponseEntity<?> getAllProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productRepository.findAll(pageable);
+
+        if (productPage.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No products found.");
+        }
+
         return ResponseEntity.ok(productPage);
     }
 
     // Get product by slug
     public ResponseEntity<?> getProductBySlug(String slug) {
-        Optional<Product> productOpt = productRepository.findBySlug(slug);
-        if (productOpt.isPresent()) {
-            return ResponseEntity.ok(productOpt.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        try {
+            Optional<Product> productOpt = productRepository.findBySlug(slug);
+            if (productOpt.isPresent()) {
+                Product product = productOpt.get();
+                System.out.println("Retrieved Product: " + product); // Log product details
+                return ResponseEntity.ok(product);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error for debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while fetching the product.");
         }
     }
 

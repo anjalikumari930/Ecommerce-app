@@ -15,7 +15,7 @@ const CategoryProduct = () => {
   const getPrductsByCat = async () => {
     try {
       const { data } = await axios.get(
-        `/api/v1/product/product-category/${params.slug}`
+        `http://localhost:8080/api/v1/product/product-category/${params.slug}`
       );
       setProducts(data?.products);
       setCategory(data?.category);
@@ -54,7 +54,11 @@ const CategoryProduct = () => {
                     </p>
                     <div className="card-name-price">
                       <button
-                        className="btn ms-1"  style={{backgroundColor: "#f0ad4e", borderColor: "#f0ad4e"}}
+                        className="btn ms-1"
+                        style={{
+                          backgroundColor: "#f0ad4e",
+                          borderColor: "#f0ad4e",
+                        }}
                         onClick={() => navigate(`/product/${p.slug}`)}
                       >
                         More Details

@@ -16,76 +16,90 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    // Retrieve all products with pagination
+
+    // Create a new product (Admin only)
     @PostMapping("/create-product")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createProduct(@RequestParam("file") MultipartFile file,
+    public ResponseEntity<?> createProduct(@RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam("product") String product) {
         return productService.createProduct(file, product);
     }
 
+    // Update an existing product (Admin only)
     @PutMapping("/update-product/{pid}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateProduct(@PathVariable String pid, @RequestParam("file") MultipartFile file,
+    public ResponseEntity<?> updateProduct(@PathVariable String pid,
+            @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam("product") String product) {
         return productService.updateProduct(pid, file, product);
     }
 
-    @GetMapping("/get-product")
-    public ResponseEntity<?> getProducts() {
-        return productService.getProducts();
-    }
-
+    // Get product by slug
     @GetMapping("/get-product/{slug}")
     public ResponseEntity<?> getSingleProduct(@PathVariable String slug) {
         return productService.getProductBySlug(slug);
     }
 
+    // Retrieve product image by product ID
     @GetMapping("/product-photo/{pid}")
     public ResponseEntity<?> getProductPhoto(@PathVariable String pid) {
         return productService.getProductPhoto(pid);
     }
 
+    // Delete a product by ID (Admin only)
     @DeleteMapping("/delete-product/{pid}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteProduct(@PathVariable String pid) {
         return productService.deleteProduct(pid);
     }
 
+    // Filter products based on criteria
     @PostMapping("/product-filters")
     public ResponseEntity<?> filterProducts(@RequestBody ProductFilterRequest request) {
         return productService.filterProducts(request);
     }
 
+    // Get total product count
     @GetMapping("/product-count")
     public ResponseEntity<?> getProductCount() {
         return productService.getProductCount();
     }
 
-    @GetMapping("/product-list/{page}")
-    public ResponseEntity<?> getProducts(@PathVariable int page) {
-        return productService.getProducts(page);
+    // Get paginated list of products
+    @GetMapping("/product-list")
+    public ResponseEntity<?> getAllProducts(
+            @RequestParam(defaultValue = "0") int page, // Default page number is 0
+            @RequestParam(defaultValue = "10") int size // Default size is 10 products per page
+    ) {
+        return productService.getAllProducts(page, size);
     }
 
+    // Search for products by keyword
     @GetMapping("/search/{keyword}")
     public ResponseEntity<?> searchProduct(@PathVariable String keyword) {
         return productService.searchProduct(keyword);
     }
 
+    // Get related products by product ID and category ID
     @GetMapping("/related-product/{pid}/{cid}")
     public ResponseEntity<?> getRelatedProduct(@PathVariable String pid, @PathVariable String cid) {
         return productService.getRelatedProduct(pid, cid);
     }
 
+    // Get products by category slug
     @GetMapping("/product-category/{slug}")
     public ResponseEntity<?> getProductByCategory(@PathVariable String slug) {
         return productService.getProductByCategory(slug);
     }
 
+    // Get Braintree token for payment
     @GetMapping("/braintree/token")
     public ResponseEntity<?> getBraintreeToken() {
         return productService.getBraintreeToken();
     }
 
+    // Process Braintree payment
     @PostMapping("/braintree/payment")
     public ResponseEntity<?> braintreePayment(@RequestBody BraintreePaymentRequest request) {
         return productService.braintreePayment(request);

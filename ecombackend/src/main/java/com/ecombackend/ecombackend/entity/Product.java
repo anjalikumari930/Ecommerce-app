@@ -17,7 +17,7 @@ public class Product {
 
     private Double price;
 
-    private Category category;
+    private Category category; // Embedded Category object
 
     private Integer quantity;
 

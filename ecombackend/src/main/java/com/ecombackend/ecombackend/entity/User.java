@@ -1,8 +1,16 @@
 package com.ecombackend.ecombackend.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
+@Getter
+@Setter
 @Document(collection = "users")
 public class User {
 
@@ -10,115 +18,41 @@ public class User {
     private String id;
 
     private String name;
-
     private String email;
-
     private String password;
-
     private String phone;
-
     private String address;
+    private String answer; // For security questions
 
-    private String answer;
+    @CreatedDate
+    private Date createdAt;
 
-    private String firstName;
+    @LastModifiedDate
+    private Date updatedAt;
 
-    private String lastName;
+    private int role = 0; // Default role set to 0 (USER)
 
-    private UserRole role;
-
-    // Enum for roles
     public enum UserRole {
-        USER, ADMIN
-    }
+        USER(0),
+        ADMIN(1);
 
-    // Getter and Setter for id
-    public String getId() {
-        return id;
-    }
+        private final int value;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+        UserRole(int value) {
+            this.value = value;
+        }
 
-    // Getter and Setter for name
-    public String getName() {
-        return name;
-    }
+        public int getValue() {
+            return value;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    // Getter and Setter for email
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    // Getter and Setter for password
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    // Getter and Setter for phone
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    // Getter and Setter for address
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    // Getter and Setter for answer (used for security questions)
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    // Getter and Setter for first name
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    // Getter and Setter for last name
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    // Getter and Setter for role
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
+        public static UserRole fromValue(int value) {
+            for (UserRole role : values()) {
+                if (role.getValue() == value) {
+                    return role;
+                }
+            }
+            throw new IllegalArgumentException("Invalid role value: " + value);
+        }
     }
 }

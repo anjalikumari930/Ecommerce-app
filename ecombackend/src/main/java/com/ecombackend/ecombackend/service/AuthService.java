@@ -3,12 +3,9 @@ package com.ecombackend.ecombackend.service;
 import com.ecombackend.ecombackend.dto.*;
 import com.ecombackend.ecombackend.entity.User;
 import com.ecombackend.ecombackend.repository.UserRepository;
-import com.ecombackend.ecombackend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +19,6 @@ public class AuthService {
     private UserRepository userRepository;
 
     @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -33,17 +27,22 @@ public class AuthService {
     /**
      * Registers a new user.
      */
-    public ResponseEntity<?> register(RegisterRequest request) {
+    public ResponseEntity<String> register(RegisterRequest request) {
         // Check if user with the same email already exists
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email already exists.");
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already registered.");
         }
 
         // Create a new user and encode the password
         User user = new User();
+        user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(User.UserRole.USER);
+        user.setPhone(request.getPhone());
+        user.setAddress(request.getAddress());
+        user.setAnswer(request.getAnswer());
+
+        // Role is automatically set to 0 by default in the User entity
 
         userRepository.save(user);
 
@@ -51,7 +50,7 @@ public class AuthService {
     }
 
     /**
-     * Logs in the user and generates a JWT token.
+     * Logs in the user and returns basic user info.
      */
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         // Check if user exists by email
@@ -67,17 +66,11 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
         }
 
-        // Load UserDetails using the UserDetailsService
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        // Return basic user information after successful login
+        UserResponse userResponse = new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getPhone(),
+                user.getAddress(), String.valueOf(user.getRole()));
 
-        // Generate JWT token using UserDetails
-        // String token = jwtUtil.generateToken(userDetails);
-
-        // Return token in response body
-        JwtResponse jwtResponse = new JwtResponse(user.getId(), user.getEmail(), user.getRole().name());
-
-        return ResponseEntity.ok(jwtResponse);
-
+        return ResponseEntity.ok(userResponse);
     }
 
     /**
@@ -85,7 +78,6 @@ public class AuthService {
      */
     public ResponseEntity<?> forgotPassword(ForgotPasswordRequest request) {
         // Implement logic to handle forgot password
-        // For example, send a reset password email with a unique token
         return ResponseEntity.ok("Forgot password feature is under construction.");
     }
 
@@ -100,8 +92,9 @@ public class AuthService {
 
         User user = optionalUser.get();
         // Update user profile details
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+        user.setName(request.getName());
+        user.setPhone(request.getPhone());
+        user.setAddress(request.getAddress());
 
         userRepository.save(user);
 
